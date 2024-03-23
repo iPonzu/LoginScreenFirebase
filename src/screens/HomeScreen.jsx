@@ -1,10 +1,13 @@
 import { Text, View } from "react-native";
-import style from "../config/style";
+import styleHomeScreen from "../config/styleHomeScreen";
+
 
 export default function HomeScreen() {
   return (
-    <View styles={style.Container}>
+    <View style={styleHomeScreen.containerHome}>
       <Text>Página inicial</Text>
     </View>
   )
 }
+
+

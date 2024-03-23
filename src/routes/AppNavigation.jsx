@@ -42,6 +42,6 @@ export default function AppNavigation() {
           }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+    </NavigationContainer>   
   )
 }

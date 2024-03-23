@@ -3,12 +3,14 @@ import { Button, Text, TextInput } from "react-native-paper";
 import { Image } from "expo-image";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import auth from '../config/api/firebase'
+import auth from '../config/api/firebaseConfig'
 import style from '../config/style'
+
 
 export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
+
 
     const fazerLogin = async () => {
         try {
@@ -16,14 +18,22 @@ export default function LoginScreen({ navigation }) {
            console.log(usuario)
            navigation.navigate("HomeScreen")
         } catch (error) {
-            console.log(error)
+            if(error.code === "auth/invalid-credential"){
+                console.error("Usuário não encontrado ou credencial inválida")
+            }else{
+                console.error(error)
+            }
         }
     }
     return(
         <View style={style.Container}> 
             <View style={style.innerContainer}>
+               <Image
+                source={require('../../assets/logo_access.png')}
+                style={{ width: 200, height: 200, marginLeft: 50}}
+                />
                <Text variant="headlineLarge" style={style.selfCenter}>Controle de acesso</Text> 
-                <Text variant="bodyMedium" style={[style.selfCenter, style.fontVariant]}>
+                <Text variant="bodyMedium" style={style.selfCenter}>
                     Realize seu login
                 </Text>
                 <Text variant="bodyMedium" style={style.selfCenter}>

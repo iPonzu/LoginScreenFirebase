@@ -1,28 +1,32 @@
 import { View } from 'react-native';
 import { Button, TextInput, Text } from 'react-native-paper';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from 'firebase/firestore';
-import auth, { db } from '../config/api/firebase';
+import auth, { db } from '../config/api/firebaseConfig'
 import { useState } from 'react';
 import style from '../config/style';
 
 
 export default function RegistroScreen({ navigation }) {
+    const [nome, setNome] = useState('')
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
-    const [nome, setNome] = useState('')
 
     const cadastrarUsuario = async () => {
         try {
             const usuario = await createUserWithEmailAndPassword(auth, email, senha)
             const uid = await usuario.user.uid
-            await setDoc(doc(db, 'usuarios', uid), {
+            await setDoc(doc(db, "usuarios", uid), {
                 nome: nome,
                 email: email,
             })
             navigation.navigate("LoginScreen")
         } catch (error) {
-            console.log(error)
+            if(error.code === "auth/email-already-in-use"){
+                console.error("Email já cadastrado")
+            }else{
+                console.log(error)
+            }
         }
     }
 
@@ -38,6 +42,7 @@ export default function RegistroScreen({ navigation }) {
                 <TextInput
                     label="Nome"
                     mode="outlined"
+                    placeholder='Nome'
                     value={nome}
                     onChangeText={setNome}
                 />
@@ -45,12 +50,14 @@ export default function RegistroScreen({ navigation }) {
                     label="Email"
                     mode="outlined"
                     keyboardType="email-address"
+                    placeholder='yourmail@gmail.com'
                     value={email}
                     onChangeText={setEmail}
                 />
                 <TextInput
                     label="Senha"
                     mode="outlined"
+                    placeholder='********'
                     secureTextEntry
                     value={senha}
                     onChangeText={setSenha}
@@ -63,7 +70,14 @@ export default function RegistroScreen({ navigation }) {
                         maxWidth: 260,
                         alignSelf: 'flex-end'
                     }}
-                    onPress={cadastrarUsuario}
+                    onPress={() => {
+                        try {
+                            cadastrarUsuario()
+                            navigation.navigate("LoginScreen")
+                        } catch (error) {
+                            console.log(error)
+                        }
+                    }}
                     >
                         Cadastrar
                 </Button>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { View } from 'react-native';
 import { Button, Text, TextInput } from 'react-native-paper';
+import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import style from '../config/style';
 
 export default function RecuperarSenhaScreen({ navigation }) {
@@ -8,8 +9,19 @@ export default function RecuperarSenhaScreen({ navigation }) {
     const [senha, setSenha] = useState('')
 
    // TODO: retrieve password task in firebase: https://firebase.google.com/docs/auth/web/email-link-auth?hl=pt-br
+
+    const auth = getAuth()
+        sendPasswordResetEmail(auth, email, senha)
+        .then(() => {
+            console.log('Email enviado')
+            window.localStorage.setItem('emailForSignIn', email)
+        })
+        .catch((error) => {
+            console.log(error)
+        })
     
-    return(
+   
+   return(
         <View style={style.Container}>
             <View style={style.innerContainer}>
                 <Text variant="headlineLarge" style={style.selfCenter}>
@@ -39,7 +51,7 @@ export default function RecuperarSenhaScreen({ navigation }) {
                         maxWidth: 260,
                         alignSelf: 'flex-end'
                     }}
-                    onPress={() => Navigation.navigate("LoginScreen")}
+                    onPress={() => navigation.navigate("LoginScreen")}
                 >
                     Recuperar
                 </Button>

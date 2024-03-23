@@ -15,7 +15,7 @@ const style = StyleSheet.create({
         alignSelf: 'center'
     },
     fontVariant: {
-        fontSize: 25,
+        fontSize: 20,
     }
 })
 
